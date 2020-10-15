@@ -5,8 +5,9 @@ import { UserModule } from './user/user.module';
 import { ProviderModule } from './provider/provider.module';
 import { SubmissionModule } from './submission/submission.module';
 import { AuthModule } from './auth/auth.module';
+import { QnaModule } from './qna/qna.module';
 
 @Module({
-  imports: [ServiceModule, RoleModule, UserModule, ProviderModule, SubmissionModule, AuthModule]
+  imports: [ServiceModule, RoleModule, UserModule, ProviderModule, SubmissionModule, AuthModule, QnaModule]
 })
 export class ModuleModule {}

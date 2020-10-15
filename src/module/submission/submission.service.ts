@@ -166,13 +166,14 @@ export class SubmissionService {
   }
 
   // reject submission requirement
-  async rejectSubmissionRequirement(submissionRequirementId: string) {
+  async rejectSubmissionRequirement(submissionRequirementId: string, rejectReason: string) {
     // get submission
     // const submision = await this.submissionRepo.findOne
 
     // get submission requirement
     const submissionRequirement = await this.submissionRequirementRepo.findOne({ where: { id: submissionRequirementId } }).catch(error => { throw new NotFoundException() })
     submissionRequirement.status = 102
+    submissionRequirement.reason = rejectReason
     await submissionRequirement.save()
   }
 

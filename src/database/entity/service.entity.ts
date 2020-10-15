@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, Unique, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToMany, JoinTable, OneToMany, OneToOne, JoinColumn } from "typeorm";
+import { Qna } from "./qna.entity";
 
 @Entity()
 export class Service extends BaseEntity {
@@ -23,6 +24,10 @@ export class Service extends BaseEntity {
 
   @DeleteDateColumn()
   deletedDate: Date
+
+  // relation
+  @OneToMany(type => Qna, qna => qna.service)
+  qnas: Qna[]
 
   // lock
   public lock() {

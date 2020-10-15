@@ -23,7 +23,7 @@ export class AppService implements OnApplicationBootstrap {
   }
 
   @Transaction()
-  onApplicationBootstrap(@TransactionManager() manager?: EntityManager) {
+  async onApplicationBootstrap(@TransactionManager() manager?: EntityManager) {
     // init role
     const initRole = [
       'Admin',
@@ -47,9 +47,15 @@ export class AppService implements OnApplicationBootstrap {
       },
       {
         username: 'system@helpdesk.com',
-        password: '@Helpdeks123!',
+        password: '@Helpdesk123!',
         name: 'Helpdesk',
         role: 'Helpdesk'
+      },
+      {
+        username: 'system@provider.com',
+        password: '@Provider123!',
+        name: 'Provider',
+        role: 'Provider'
       }
     ]
     // init submission type
@@ -69,27 +75,30 @@ export class AppService implements OnApplicationBootstrap {
     ]
 
     // create role if not exist
-    initRole.forEach(async (roleName, index) => {
+    for (const roleData of initRole) {
       // get role
-      const role = await this.roleRepo.findOne({ where: { name: roleName } })
+      const role = await this.roleRepo.findOne({ where: { name: roleData } })
       // check if role not exist
       if (!role) {
         // create new role
         const newRole = new Role()
-        newRole.name = roleName
-        newRole.description = roleName
+        newRole.name = roleData
+        newRole.description = roleData
         await newRole.save()
       }
-    })
+    }
+    // await initRole.forEach(async (roleName, index) => {
 
-    // create admin user
-    initUser.forEach(async (userData: any, index) => {
+    // })
+
+    for (const userData of initUser) {
       // get user
       const user = await this.userRepo.findOne({ where: { username: userData.username } })
       // check if user not exist
       if (!user) {
         // get role
         const role = await this.roleRepo.findOne({ where: { name: userData.role } })
+        console.log('role', userData.role, role)
         // new user info
         const newUserInfo = new UserInfo()
         newUserInfo.name = userData.name
@@ -103,20 +112,29 @@ export class AppService implements OnApplicationBootstrap {
         newUser.info = newUserInfo
         await newUser.save()
       }
-    })
+    }
 
-    // create submission type
-    initSubmissionType.forEach(async (submissionTypeData, index) => {
+    // // create admin user
+    // await initUser.forEach(async (userData: any, index) => {
+
+    // })
+    for (const submissionTypeData of initSubmissionType) {
       // get submission type
       const submissionType = await this.submissionTypeRepo.findOne({ where: { name: submissionTypeData.name } })
       // check if submission type not exist
       if (!submissionType) {
         // create new role
-        const newSubmissionType= new SubmissionType()
+        const newSubmissionType = new SubmissionType()
         newSubmissionType.name = submissionTypeData.name
         newSubmissionType.description = submissionTypeData.description
         await newSubmissionType.save()
       }
-    })
+    }
+
+
+    // // create submission type
+    // await initSubmissionType.forEach(async (submissionTypeData, index) => {
+
+    // })
   }
 }

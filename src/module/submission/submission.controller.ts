@@ -6,6 +6,7 @@ import { SubmissionService } from './submission.service';
 import * as multer from 'multer'
 import * as mime from 'mime-types'
 import { CreateSubmissionDto } from './dto/create-submission.dto';
+import { RejectDto } from './dto/reject.dto';
 
 @Controller('submission')
 export class SubmissionController {
@@ -172,8 +173,8 @@ export class SubmissionController {
 
   // reject uploaded submission requirement
   @Patch('/requirement/:submissionRequirementId/reject')
-  async rejectUploadedSubmissionRequirement(@Param('submissionRequirementId') submissionRequirementId: string) {
-    return this.submissionService.rejectSubmissionRequirement(submissionRequirementId)
+  async rejectUploadedSubmissionRequirement(@Param('submissionRequirementId') submissionRequirementId: string, @Body() rejectData: RejectDto) {
+    return this.submissionService.rejectSubmissionRequirement(submissionRequirementId, rejectData.reason)
   }
 
   // submit approval helpdesk
