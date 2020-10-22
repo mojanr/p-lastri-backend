@@ -34,6 +34,9 @@ export class Submission extends BaseEntity {
   @Column({ default: 100 })
   verifikatorStatus: number
 
+  @Column({ type: 'text', default: '' })
+  comment: string
+
   @Column({ default: 100 })
   helpdeskStatus: number
 

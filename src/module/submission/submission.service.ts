@@ -119,7 +119,18 @@ export class SubmissionService {
     // console.log('submission type reqirement', submissionType)
 
     // set requirement submission
-    await submissionType.submissionTypeRequirement.forEach(async (submissionTypeRequirement, index) => {
+    // await submissionType.submissionTypeRequirement.forEach(async (submissionTypeRequirement, index) => {
+    //   const newSubmissionRequirement = new SubmissionRequirement()
+    //   newSubmissionRequirement.order = submissionTypeRequirement.order
+    //   newSubmissionRequirement.name = submissionTypeRequirement.name
+    //   newSubmissionRequirement.description = submissionTypeRequirement.description
+    //   newSubmissionRequirement.template = submissionTypeRequirement.template
+    //   newSubmissionRequirement.required = submissionTypeRequirement.required
+    //   newSubmissionRequirement.submission = resultNewSubmission
+    //   await newSubmissionRequirement.save()
+    // })
+
+    for (const submissionTypeRequirement of submissionType.submissionTypeRequirement) {
       const newSubmissionRequirement = new SubmissionRequirement()
       newSubmissionRequirement.order = submissionTypeRequirement.order
       newSubmissionRequirement.name = submissionTypeRequirement.name
@@ -128,7 +139,7 @@ export class SubmissionService {
       newSubmissionRequirement.required = submissionTypeRequirement.required
       newSubmissionRequirement.submission = resultNewSubmission
       await newSubmissionRequirement.save()
-    })
+    }
   }
 
   // cancel submission
@@ -207,17 +218,22 @@ export class SubmissionService {
         }
       })
 
-      await submissionRequirements.forEach(async (submissionRequirement, index) => {
+      // await submissionRequirements.forEach(async (submissionRequirement, index) => {
+      //   submissionRequirement.status = 100
+      //   await submissionRequirement.save()
+      // })
+
+      for (const submissionRequirement of submissionRequirements) {
         submissionRequirement.status = 100
         await submissionRequirement.save()
-      })
+      }
     }
 
     await submission.save()
   }
 
   // submit approval verifikator
-  async submitApprovalVerifikator(submissionId: string) {
+  async submitApprovalVerifikator(submissionId: string, comment?: string) {
     // get submission
     const submission = await this.submissionRepo.findOne({
       where: {
@@ -238,6 +254,7 @@ export class SubmissionService {
     } else {
       submission.status = 103
       submission.verifikatorStatus = 103
+      submission.comment = comment
     }
 
     await submission.save()
@@ -315,5 +332,22 @@ export class SubmissionService {
     const submissionRequirement = await this.submissionRequirementRepo.findOne({ where: { id: submissionRequirementId } }).catch(error => { throw new NotFoundException() })
     submissionRequirement.file = file
     await submissionRequirement.save()
+  }
+
+  // get history
+  async getHistory(userId: string, submissionTypeId: number) {
+    return await this.submissionRepo.find({
+      where: {
+        // status: 103,
+        createdBy: userId,
+        submissionTypeId: submissionTypeId
+      },
+      relations: [
+        'submissionRequirements'
+      ],
+      order: {
+        createdDate: 'DESC'
+      }
+    })
   }
 }

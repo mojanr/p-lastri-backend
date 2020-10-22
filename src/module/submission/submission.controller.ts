@@ -7,6 +7,8 @@ import * as multer from 'multer'
 import * as mime from 'mime-types'
 import { CreateSubmissionDto } from './dto/create-submission.dto';
 import { RejectDto } from './dto/reject.dto';
+import { SubmitApprovalDto } from './dto/submit-approval-verifikator.dto';
+import { SubmissionType } from 'src/database/entity/submission-type.entity';
 
 @Controller('submission')
 export class SubmissionController {
@@ -17,6 +19,12 @@ export class SubmissionController {
   @Get('/type')
   async getSubmissionTypes() {
     return this.submissionService.getSubmissionTypes()
+  }
+
+  // get history
+  @Get('/history/:userId/:submissionType')
+  async getHistory(@Param('userId') userId: string, @Param('submissionType') submissionTypeId: number) {
+    return this.submissionService.getHistory(userId, submissionTypeId)
   }
 
   // create submission type
@@ -185,8 +193,8 @@ export class SubmissionController {
 
   // submit approval verifikator
   @Patch('/submit/approval/verifikator/:submissionId')
-  async submitApprovalVerifikator(@Param('submissionId') submissionId: string) {
-    return this.submissionService.submitApprovalVerifikator(submissionId)
+  async submitApprovalVerifikator(@Param('submissionId') submissionId: string, @Body() submitApproval: SubmitApprovalDto ) {
+    return this.submissionService.submitApprovalVerifikator(submissionId, submitApproval.comment)
   }
 
 }
