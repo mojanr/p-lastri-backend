@@ -15,7 +15,7 @@ WORKDIR /app
 COPY . /app
 
 # #prepare the contiainer for building react 
-RUN npm install --silent
+RUN npm install
 
 # #prepare nginx
 # FROM nginx:1.16.0-alpine
